@@ -32,4 +32,9 @@ def scan_network(network_range: str) -> str:
         text=True
         )
 
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"Nmap scan failed with the following error:\n{result.stderr}"
+        )
+
     return result.stdout
