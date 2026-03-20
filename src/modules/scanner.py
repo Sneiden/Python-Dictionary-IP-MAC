@@ -25,7 +25,7 @@ def scan_network(network_range: str) -> str:
     print("\n[!] Note: Run as Administrator to ensure MAC address resolution.\n")
 
     result = subprocess.run(
-        ["nmap", "-sn", "-oX", "-", network_range],
+        ["nmap", "-sn", "-PR", network_range, "-oX", "-"],
         capture_output=True,
         text=True
         )
