@@ -1,6 +1,7 @@
 import subprocess
 
 def get_network_range() -> str:
+
     """
     Detects the local network range to be scanned.
 
@@ -8,6 +9,8 @@ def get_network_range() -> str:
     then converts them to CIDR notation (e.g., 192.168.1.0/24).
     Raises:
         RuntimeError: If IP or subnet mask cannot be detected.
+    Returns:
+        str: Network range in CIDR notation.
     """
 
     result = subprocess.run(
@@ -36,7 +39,6 @@ def get_network_range() -> str:
         if "Subnet Mask" in line:
             current_subnet = line.split(":")[-1].strip()
 
-        print(current_name, current_ip, current_subnet)
         if current_name and current_ip and current_subnet:
             interfaces.append({
                 "name": current_name,
@@ -70,11 +72,31 @@ def get_network_range() -> str:
                 break
             print(f"  Invalid choice. Please enter a number between 1 and {len(interfaces)}.")
 
-    return selected
+    try:
+        network_range = _to_cidr(selected["ip"], selected["subnet"])
+    except Exception:
+        raise RuntimeError(
+            f"Could not calculate network range for '{selected['name']}'. "
+            f"IP: {selected['ip']}, Subnet: {selected['subnet']}"
+        )
+    print(f"\n  Selected: {selected['name']} — {network_range}\n")
+    return network_range
 
+def _to_cidr(ip: str, subnet: str) -> str:
     """
+    Converts an IP address and subnet mask to CIDR notation.
+
+    Args:
+        ip (str): Local IP address (e.g., '192.168.1.100').
+        subnet (str): Subnet mask (e.g., '255.255.255.0').
+
     Returns:
-        str: Network range in CIDR notation.
+        str: CIDR notation (e.g., '192.168.1.0/24').
     """
-
+    mask_bits = sum(bin(int(x)).count("1") for x in subnet.split("."))
+    network_base = ".".join(
+        str(int(a) & int(b))
+        for a, b in zip(ip.split("."), subnet.split("."))
+    )
+    return f"{network_base}/{mask_bits}"
 
