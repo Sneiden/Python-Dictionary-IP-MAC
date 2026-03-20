@@ -47,6 +47,12 @@ def parse_nmap_output(raw_xml: str) -> List[Dict[str, str]]:
                 device["mac"] = address.get("addr", "N/A")
                 device["vendor"] = address.get("vendor", "N/A")
 
+        hostnames = host.find("hostnames")
+        if hostnames is not None:
+            first_hostname = hostnames.find("hostname")
+            if first_hostname is not None:
+                device["hostname"] = first_hostname.get("name", "N/A")
+
         devices.append(device)
 
     return devices
