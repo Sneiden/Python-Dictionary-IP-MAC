@@ -55,4 +55,9 @@ def parse_nmap_output(raw_xml: str) -> List[Dict[str, str]]:
 
         devices.append(device)
 
+    devices = [
+        device for device in devices
+        if device["ip"] != "N/A"
+    ]
+    
     return devices
