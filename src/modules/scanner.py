@@ -1,5 +1,6 @@
 import subprocess
 import shutil
+from network_info import get_network_range
 
 
 def scan_network(network_range: str) -> str:
@@ -17,5 +18,18 @@ def scan_network(network_range: str) -> str:
         EnvironmentError: If Nmap is not installed or not found in PATH.
         RuntimeError: If the Nmap scan fails.
     """
-    pass
+    if not shutil.which("nmap"):
+        raise EnvironmentError(
+            "Nmap is not installed or not found in PATH. "
+            "Download it from https://nmap.org/download.html"
+        )
+    
+    print("\n[!] Note: Run as Administrator to ensure MAC address resolution.\n")
 
+    result = subprocess.run(
+        ["nmap", "-sn", network_range],
+        capture_output=True,
+        text=True
+        )
+
+    return result.stdout
