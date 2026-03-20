@@ -21,4 +21,7 @@ def parse_nmap_output(raw_xml: str) -> List[Dict[str, str]]:
     Raises:
         ValueError: If the XML input is empty or malformed.
     """
-    pass
+    root = ET.fromstring(raw_xml)
+    hosts = root.findall("host")
+    devices = []
+
