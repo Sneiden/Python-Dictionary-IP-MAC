@@ -30,13 +30,6 @@ def get_network_range() -> str:
         if line.strip() == "" or line.startswith(" "):
             pass
         elif line.endswith(":"):
-            # Save previous interface if complete
-            if current_name and current_ip and current_subnet:
-                interfaces.append({
-                    "name": current_name,
-                    "ip": current_ip,
-                    "subnet": current_subnet
-                })
             current_name = line.strip().rstrip(":")
             current_ip = None
             current_subnet = None
@@ -46,16 +39,20 @@ def get_network_range() -> str:
         if "Subnet Mask" in line:
             current_subnet = line.split(":")[-1].strip()
 
-    # Capture the last interface
-    if current_name and current_ip and current_subnet:
-        interfaces.append({
-            "name": current_name,
-            "ip": current_ip,
-            "subnet": current_subnet
-        })
+        print(current_name, current_ip, current_subnet)
+        if current_name and current_ip and current_subnet:
+            interfaces.append({
+                "name": current_name,
+                "ip": current_ip,
+                "subnet": current_subnet
+            })
+            current_name = None
+            current_ip = None
+            current_subnet = None
+
 
     for i in interfaces:
         print(i)
-        
-    return "ok"
+
+    return output
 
