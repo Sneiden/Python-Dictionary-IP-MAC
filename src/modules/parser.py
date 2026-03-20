@@ -21,7 +21,14 @@ def parse_nmap_output(raw_xml: str) -> List[Dict[str, str]]:
     Raises:
         ValueError: If the XML input is empty or malformed.
     """
-    root = ET.fromstring(raw_xml)
+    if not raw_xml or not raw_xml.strip():
+        raise ValueError("Nmap output is empty.")
+
+    try:
+        root = ET.fromstring(raw_xml)
+    except ET.ParseError as e:
+        raise ValueError(f"Failed to parse Nmap XML output: {e}")
+
     hosts = root.findall("host")
     devices = []
 
@@ -59,5 +66,14 @@ def parse_nmap_output(raw_xml: str) -> List[Dict[str, str]]:
         device for device in devices
         if device["ip"] != "N/A"
     ]
-    
+
     return devices
+
+if __name__ == "__main__":
+    from network_info import get_network_range
+    from scanner import scan_network
+    network_range = get_network_range()
+    raw_xml = scan_network(network_range)
+    devices = parse_nmap_output(raw_xml)
+    for device in devices:
+        print(device)
