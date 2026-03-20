@@ -6,13 +6,10 @@ def get_network_range() -> str:
 
     Runs 'ipconfig' to extract the local IP address and subnet mask,
     then converts them to CIDR notation (e.g., 192.168.1.0/24).
-
-    Returns:
-        str: Network range in CIDR notation.
-
     Raises:
         RuntimeError: If IP or subnet mask cannot be detected.
     """
+
     result = subprocess.run(
         ["ipconfig"],
         capture_output=True,
@@ -50,28 +47,34 @@ def get_network_range() -> str:
             current_ip = None
             current_subnet = None
 
-    # Capture the last interface
-    # if current_name and current_ip and current_subnet:
-    #     interfaces.append({
-    #         "name": current_name,
-    #         "ip": current_ip,
-    #         "subnet": current_subnet
-    #     })
-
     if not interfaces:
         raise RuntimeError("No active network interfaces found.")
 
-    print("\nAvailable network interfaces:")
-    for i, iface in enumerate(interfaces):
-        print(f"  [{i + 1}] {iface['name']} — {iface['ip']}")
+    if len(interfaces) == 1:
+        iface = interfaces[0]
+        print(f"\nOne interface found: {iface['name']} — {iface['ip']}")
+        confirm = input("Use this interface? [y/n]: ").strip().lower()
+        if confirm != "y":
+            raise RuntimeError("Scan cancelled by user.")
+        selected = iface
+    else:
+        print("\nAvailable network interfaces:")
+        for i, iface in enumerate(interfaces):
+            print(f"  [{i + 1}] {iface['name']} — {iface['ip']}")
 
-    print()
-    while True:
-        choice = input(f"Select an interface [1-{len(interfaces)}]: ").strip()
-        if choice.isdigit() and 1 <= int(choice) <= len(interfaces):
-            selected = interfaces[int(choice) - 1]
-            break
-        print(f"  Invalid choice. Please enter a number between 1 and {len(interfaces)}.")
+        print()
+        while True:
+            choice = input(f"Select an interface [1-{len(interfaces)}]: ").strip()
+            if choice.isdigit() and 1 <= int(choice) <= len(interfaces):
+                selected = interfaces[int(choice) - 1]
+                break
+            print(f"  Invalid choice. Please enter a number between 1 and {len(interfaces)}.")
 
     return selected
+
+    """
+    Returns:
+        str: Network range in CIDR notation.
+    """
+
 
