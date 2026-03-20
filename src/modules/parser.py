@@ -68,12 +68,3 @@ def parse_nmap_output(raw_xml: str) -> List[Dict[str, str]]:
     ]
 
     return devices
-
-if __name__ == "__main__":
-    from network_info import get_network_range
-    from scanner import scan_network
-    network_range = get_network_range()
-    raw_xml = scan_network(network_range)
-    devices = parse_nmap_output(raw_xml)
-    for device in devices:
-        print(device)
