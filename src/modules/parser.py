@@ -25,3 +25,28 @@ def parse_nmap_output(raw_xml: str) -> List[Dict[str, str]]:
     hosts = root.findall("host")
     devices = []
 
+    for host in hosts:
+        device = {
+            "ip": "N/A",
+            "mac": "N/A",
+            "vendor": "N/A",
+            "hostname": "N/A",
+            "type": "remote"
+        }
+
+        # Tag localhost device
+        status = host.find("status")
+        if status is not None and status.get("reason") == "localhost-response":
+            device["type"] = "localhost"
+
+        for address in host.findall("address"):
+            addr_type = address.get("addrtype")
+            if addr_type == "ipv4":
+                device["ip"] = address.get("addr", "N/A")
+            elif addr_type == "mac":
+                device["mac"] = address.get("addr", "N/A")
+                device["vendor"] = address.get("vendor", "N/A")
+
+        devices.append(device)
+
+    return devices
