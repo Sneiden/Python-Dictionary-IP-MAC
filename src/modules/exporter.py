@@ -36,3 +36,19 @@ def export_to_json(devices: List[Dict[str, str]]) -> str:
         "localhost": next((d for d in devices if d["type"] == "localhost"), None),
         "remote_devices": [d for d in devices if d["type"] == "remote"]
     }
+
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=4, ensure_ascii=False)
+
+    print(f"\n[✓] Network dictionary exported to: {os.path.abspath(filepath)}")
+    return os.path.abspath(filepath)
+
+
+if __name__ == "__main__":
+    sample_devices = [
+        {"ip": "192.168.1.66", "mac": "N/A", "vendor": "N/A", "hostname": "Admin", "type": "localhost"},
+        {"ip": "192.168.1.1", "mac": "AA:BB:CC:DD:EE:FF", "vendor": "Cisco Systems", "hostname": "router.local", "type": "remote"},
+        {"ip": "192.168.1.75", "mac": "A8:54:B2:4C:5A:08", "vendor": "Heimgard Technologies", "hostname": "7962v1", "type": "remote"}
+    ]
+    result = export_to_json(sample_devices)
+    print(f"File created at: {result}")
