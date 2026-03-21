@@ -26,9 +26,13 @@ def export_to_json(devices: List[Dict[str, str]]) -> str:
         )
     os.makedirs(output_dir, exist_ok=True)
 
-if __name__ == "__main__":
-    import os
-    output_dir = os.path.join(os.path.dirname(__file__), "..", "..", "output")
-    os.makedirs(output_dir, exist_ok=True)
-    print(f"Output directory: {os.path.abspath(output_dir)}")
-    print(f"Exists: {os.path.exists(output_dir)}")
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"Network_Dictionary_{timestamp}.json"
+    filepath = os.path.join(output_dir, filename)
+
+    payload = {
+        "scan_timestamp": datetime.now().isoformat(),
+        "total_devices": len(devices),
+        "localhost": next((d for d in devices if d["type"] == "localhost"), None),
+        "remote_devices": [d for d in devices if d["type"] == "remote"]
+    }
