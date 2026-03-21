@@ -15,5 +15,9 @@ def main():
     spinner.stop()
     print("[✓] Scan complete.")
 
+    # Step 3: Parse Nmap output
+    devices = parse_nmap_output(raw_xml)
+    print(f"[✓] Found {len(devices)} devices on the network.")
+
 if __name__ == "__main__":
     main()
