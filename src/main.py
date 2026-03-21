@@ -7,7 +7,13 @@ from utils.spinner import Spinner
 def main():
     # Step 1: Get network range
     network_range = get_network_range()
-    print(network_range)
+
+    # Step 2: Run Nmap scan
+    spinner = Spinner("Scanning network, this may take a few seconds...")
+    spinner.start()
+    raw_xml = scan_network(network_range)
+    spinner.stop()
+    print("[✓] Scan complete.")
 
 if __name__ == "__main__":
     main()
