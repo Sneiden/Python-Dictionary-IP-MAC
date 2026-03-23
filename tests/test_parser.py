@@ -44,6 +44,10 @@ class TestParser(unittest.TestCase):
     def setUp(self):
         self.devices = parse_nmap_output(SAMPLE_XML)
 
+    def test_device_count(self):
+        """Total devices should be 3 — the host with no IP is filtered out."""
+        self.assertEqual(len(self.devices), 3)
+
 
 if __name__ == "__main__":
     unittest.main()
