@@ -117,5 +117,15 @@ class TestParser(unittest.TestCase):
         with self.assertRaises(ValueError):
             parse_nmap_output("   ")
 
+    def test_malformed_xml_raises_value_error(self):
+        """Malformed XML input should raise a ValueError."""
+        with self.assertRaises(ValueError):
+            parse_nmap_output("<nmaprun><host><unclosed>")
+
+    def test_invalid_xml_raises_value_error(self):
+        """Non-XML input should raise a ValueError."""
+        with self.assertRaises(ValueError):
+            parse_nmap_output("this is not xml at all")
+
 if __name__ == "__main__":
     unittest.main()
