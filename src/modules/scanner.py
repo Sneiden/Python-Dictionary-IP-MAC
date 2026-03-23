@@ -1,5 +1,6 @@
 import subprocess
 import shutil
+from utils.config import get_config
 from utils.logger import setup_logger
 
 logger = setup_logger()
@@ -19,6 +20,10 @@ def scan_network(network_range: str) -> str:
         EnvironmentError: If Nmap is not installed or not found in PATH.
         RuntimeError: If the Nmap scan fails.
     """
+    config = get_config()
+    nmap_flags = config["nmap_flags"]
+    timeout = config["timeout_seconds"]
+
     if not shutil.which("nmap"):
         logger.error("Nmap is not installed or not found in PATH.")
         raise EnvironmentError(
@@ -30,10 +35,11 @@ def scan_network(network_range: str) -> str:
     logger.debug(f"Starting Nmap scan on network range: {network_range}")
 
     result = subprocess.run(
-        ["nmap", "-sn", "-PR", network_range, "-oX", "-"],
+        ["nmap"] + nmap_flags + [network_range],
         capture_output=True,
-        text=True
-        )
+        text=True,
+        timeout=timeout
+    )
 
     if result.returncode != 0:
         logger.error(f"Nmap scan failed:\n{result.stderr}")
