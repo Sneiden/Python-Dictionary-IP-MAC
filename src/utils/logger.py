@@ -1,6 +1,7 @@
 import logging
 import os
 from datetime import datetime
+from utils.config import get_config
 
 
 def setup_logger(name: str = "ip_mac_scanner") -> logging.Logger:
@@ -20,11 +21,13 @@ def setup_logger(name: str = "ip_mac_scanner") -> logging.Logger:
     Raises:
         OSError: If the log directory cannot be created.
     """
+    config = get_config()
+
     log_dir = os.path.join(
         os.path.dirname(__file__),
         "..",
         "..",
-        "logs"
+        config["log_directory"]
     )
     try:
         os.makedirs(log_dir, exist_ok=True)
@@ -37,11 +40,12 @@ def setup_logger(name: str = "ip_mac_scanner") -> logging.Logger:
     )
 
     logger = logging.getLogger(name)
-    logger.setLevel(logging.DEBUG)
+    log_level = getattr(logging, config["log_level"].upper(), logging.DEBUG)
+    logger.setLevel(log_level)
 
     if not logger.handlers:
         file_handler = logging.FileHandler(log_file, encoding="utf-8")
-        file_handler.setLevel(logging.DEBUG)
+        file_handler.setLevel(log_level)
         console_handler = logging.StreamHandler()
         console_handler.setLevel(logging.INFO)
         formatter = logging.Formatter(
