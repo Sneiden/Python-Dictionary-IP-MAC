@@ -20,4 +20,29 @@ def setup_logger(name: str = "ip_mac_scanner") -> logging.Logger:
     Raises:
         OSError: If the log directory cannot be created.
     """
-    pass
+    log_dir = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "..",
+        "logs"
+    )
+    os.makedirs(log_dir, exist_ok=True)
+
+    log_file = os.path.join(
+        log_dir,
+        f"scan_{datetime.now().strftime('%Y%m%d')}.log"
+    )
+
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    if not logger.handlers:
+        file_handler = logging.FileHandler(log_file, encoding="utf-8")
+        file_handler.setLevel(logging.DEBUG)
+
+if __name__ == "__main__":
+    import os
+    log_dir = os.path.join(os.path.dirname(__file__), "..", "..", "logs")
+    os.makedirs(log_dir, exist_ok=True)
+    print(f"Log directory: {os.path.abspath(log_dir)}")
+    print(f"Exists: {os.path.exists(log_dir)}")
