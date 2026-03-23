@@ -76,6 +76,16 @@ class TestParser(unittest.TestCase):
         """Localhost device should have its hostname extracted correctly."""
         localhost = next(d for d in self.devices if d["type"] == "localhost")
         self.assertEqual(localhost["hostname"], "Admin")
+    
+    def test_localhost_tagged(self):
+        """Device with reason='localhost-response' should be tagged as localhost."""
+        localhost = next(d for d in self.devices if d["ip"] == "192.168.1.33")
+        self.assertEqual(localhost["type"], "localhost")
+
+    def test_localhost_no_mac(self):
+        """Localhost device should have no MAC address."""
+        localhost = next(d for d in self.devices if d["type"] == "localhost")
+        self.assertEqual(localhost["mac"], "N/A")
 
 if __name__ == "__main__":
     unittest.main()
