@@ -19,5 +19,9 @@ def main():
     devices = parse_nmap_output(raw_xml)
     print(f"[✓] Found {len(devices)} devices on the network.")
 
+    # Step 4: Export to JSON
+    filepath = export_to_json(devices)
+    print(f"[✓] Network dictionary saved to: {filepath}")
+
 if __name__ == "__main__":
     main()
