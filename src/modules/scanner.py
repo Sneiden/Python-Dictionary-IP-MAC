@@ -1,5 +1,8 @@
 import subprocess
 import shutil
+from utils.logger import setup_logger
+
+logger = setup_logger()
 
 def scan_network(network_range: str) -> str:
     """
@@ -17,12 +20,14 @@ def scan_network(network_range: str) -> str:
         RuntimeError: If the Nmap scan fails.
     """
     if not shutil.which("nmap"):
+        logger.error("Nmap is not installed or not found in PATH.")
         raise EnvironmentError(
             "Nmap is not installed or not found in PATH. "
             "Download it from https://nmap.org/download.html"
         )
     
     print("\n[!] Note: Run as Administrator to ensure MAC address resolution.\n")
+    logger.debug(f"Starting Nmap scan on network range: {network_range}")
 
     result = subprocess.run(
         ["nmap", "-sn", "-PR", network_range, "-oX", "-"],
@@ -31,8 +36,10 @@ def scan_network(network_range: str) -> str:
         )
 
     if result.returncode != 0:
+        logger.error(f"Nmap scan failed:\n{result.stderr}")
         raise RuntimeError(
             f"Nmap scan failed with the following error:\n{result.stderr}"
         )
 
+    logger.debug("Nmap scan raw XML output captured successfully.")
     return result.stdout
