@@ -67,5 +67,15 @@ class TestParser(unittest.TestCase):
         router = next(d for d in self.devices if d["ip"] == "192.168.1.1")
         self.assertEqual(router["vendor"], "Cisco Systems")
 
+    def test_hostname_extraction(self):
+        """Devices should have their hostname extracted correctly."""
+        router = next(d for d in self.devices if d["ip"] == "192.168.1.1")
+        self.assertEqual(router["hostname"], "router.local")
+
+    def test_hostname_localhost(self):
+        """Localhost device should have its hostname extracted correctly."""
+        localhost = next(d for d in self.devices if d["type"] == "localhost")
+        self.assertEqual(localhost["hostname"], "Admin")
+
 if __name__ == "__main__":
     unittest.main()
