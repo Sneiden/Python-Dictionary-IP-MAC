@@ -45,5 +45,4 @@ def export_to_json(devices: List[Dict[str, str]]) -> str:
             f"Failed to write network dictionary to '{filepath}': {e}"
         )
 
-    print(f"\n[✓] Network dictionary exported to: {os.path.abspath(filepath)}")
     return os.path.abspath(filepath)
