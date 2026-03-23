@@ -48,6 +48,12 @@ class TestParser(unittest.TestCase):
         """Total devices should be 3 — the host with no IP is filtered out."""
         self.assertEqual(len(self.devices), 3)
 
+    def test_ip_extraction(self):
+        """Each device should have a valid IPv4 address."""
+        ips = [device["ip"] for device in self.devices]
+        self.assertIn("192.168.1.33", ips)
+        self.assertIn("192.168.1.1", ips)
+        self.assertIn("192.168.1.20", ips)
 
 if __name__ == "__main__":
     unittest.main()
