@@ -2,6 +2,7 @@ import json
 import os
 from datetime import datetime
 from typing import List, Dict
+from utils.config import get_config
 from utils.logger import setup_logger
 
 logger = setup_logger()
@@ -20,11 +21,13 @@ def export_to_json(devices: List[Dict[str, str]]) -> str:
     Raises:
         OSError: If the output directory cannot be created or the file cannot be written.
     """
+    config = get_config()
+
     output_dir = os.path.join(
         os.path.dirname(__file__),
         "..",
         "..",
-        "output"
+        config["output_directory"]
         )
     try:
         os.makedirs(output_dir, exist_ok=True)
@@ -33,7 +36,7 @@ def export_to_json(devices: List[Dict[str, str]]) -> str:
         raise OSError(f"Failed to create output directory '{output_dir}': {e}")
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"Network_Dictionary_{timestamp}.json"
+    filename = f"{config['filename_prefix']}_{timestamp}.json"
     filepath = os.path.join(output_dir, filename)
     logger.debug(f"Output file path resolved: {os.path.abspath(filepath)}")
 
