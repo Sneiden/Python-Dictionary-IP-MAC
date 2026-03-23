@@ -98,5 +98,14 @@ class TestParser(unittest.TestCase):
         for device in remote_devices:
             self.assertNotEqual(device["mac"], "N/A")
 
+    def test_host_with_no_ip_filtered(self):
+        """Hosts with no valid IP address should be filtered out."""
+        ips = [device["ip"] for device in self.devices]
+        self.assertNotIn("N/A", ips)
+
+    def test_total_after_depuration(self):
+        """Sample XML has 4 hosts but 1 has no IP — only 3 should remain."""
+        self.assertEqual(len(self.devices), 3)
+
 if __name__ == "__main__":
     unittest.main()
