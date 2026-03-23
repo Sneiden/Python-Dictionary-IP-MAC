@@ -1,0 +1,5 @@
+# No third-party pip packages required for core functionality.
+# Nmap must be installed separately: https://nmap.org/download.html
+#
+# Optional: for extended features
+# python-nmap==0.7.1    # Python wrapper for nmap (alternative to subprocess)
