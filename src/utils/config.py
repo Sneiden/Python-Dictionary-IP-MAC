@@ -32,7 +32,12 @@ def load_config() -> Dict[str, Any]:
         )
 
     with open(config_path, "r", encoding="utf-8") as f:
-        config = json.load(f)
+        try:
+            config = json.load(f)
+        except json.JSONDecodeError as e:
+            raise ValueError(
+                f"settings.json contains invalid JSON: {e}"
+            )
 
     return config
 
@@ -59,8 +64,3 @@ def get_config() -> Dict[str, Any]:
         "log_level": config["logging"]["level"],
         "log_directory": config["logging"]["directory"]
     }
-
-if __name__ == "__main__":
-    config = get_config()
-    for key, value in config.items():
-        print(f"{key}: {value}")
