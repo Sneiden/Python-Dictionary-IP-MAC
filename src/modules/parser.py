@@ -1,6 +1,8 @@
 import xml.etree.ElementTree as ET
 from typing import List, Dict
+from utils.logger import setup_logger
 
+logger = setup_logger()
 
 def parse_nmap_output(raw_xml: str) -> List[Dict[str, str]]:
     """
@@ -22,14 +24,17 @@ def parse_nmap_output(raw_xml: str) -> List[Dict[str, str]]:
         ValueError: If the XML input is empty or malformed.
     """
     if not raw_xml or not raw_xml.strip():
+        logger.error("Nmap output is empty.")
         raise ValueError("Nmap output is empty.")
 
     try:
         root = ET.fromstring(raw_xml)
     except ET.ParseError as e:
+        logger.error(f"Failed to parse Nmap XML output: {e}")
         raise ValueError(f"Failed to parse Nmap XML output: {e}")
 
     hosts = root.findall("host")
+    logger.debug(f"Found {len(hosts)} host elements in XML output.")
     devices = []
 
     for host in hosts:
@@ -45,6 +50,7 @@ def parse_nmap_output(raw_xml: str) -> List[Dict[str, str]]:
         status = host.find("status")
         if status is not None and status.get("reason") == "localhost-response":
             device["type"] = "localhost"
+            logger.debug("Localhost device detected and tagged.")
 
         for address in host.findall("address"):
             addr_type = address.get("addrtype")
@@ -60,6 +66,7 @@ def parse_nmap_output(raw_xml: str) -> List[Dict[str, str]]:
             if first_hostname is not None:
                 device["hostname"] = first_hostname.get("name", "N/A")
 
+        logger.debug(f"Parsed device: {device['ip']} | {device['mac']} | {device['type']}")
         devices.append(device)
 
     devices = [
@@ -67,4 +74,5 @@ def parse_nmap_output(raw_xml: str) -> List[Dict[str, str]]:
         if device["ip"] != "N/A"
     ]
 
+    logger.info(f"Depurated device list: {len(devices)} valid devices.")
     return devices
