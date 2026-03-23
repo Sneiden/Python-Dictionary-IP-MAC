@@ -26,7 +26,10 @@ def setup_logger(name: str = "ip_mac_scanner") -> logging.Logger:
         "..",
         "logs"
     )
-    os.makedirs(log_dir, exist_ok=True)
+    try:
+        os.makedirs(log_dir, exist_ok=True)
+    except OSError as e:
+        raise OSError(f"Failed to create log directory '{log_dir}': {e}")
 
     log_file = os.path.join(
         log_dir,
