@@ -87,5 +87,16 @@ class TestParser(unittest.TestCase):
         localhost = next(d for d in self.devices if d["type"] == "localhost")
         self.assertEqual(localhost["mac"], "N/A")
 
+    def test_remote_tagged(self):
+        """Devices with reason='arp-response' should be tagged as remote."""
+        remote_devices = [d for d in self.devices if d["type"] == "remote"]
+        self.assertEqual(len(remote_devices), 2)
+
+    def test_remote_has_mac(self):
+        """Remote devices should have a valid MAC address."""
+        remote_devices = [d for d in self.devices if d["type"] == "remote"]
+        for device in remote_devices:
+            self.assertNotEqual(device["mac"], "N/A")
+
 if __name__ == "__main__":
     unittest.main()
