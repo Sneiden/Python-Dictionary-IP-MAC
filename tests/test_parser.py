@@ -6,6 +6,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from modules.parser import parse_nmap_output
 
+import logging
+logging.disable(logging.CRITICAL)
 
 SAMPLE_XML = """<?xml version="1.0" encoding="UTF-8"?>
 <nmaprun>
@@ -54,6 +56,16 @@ class TestParser(unittest.TestCase):
         self.assertIn("192.168.1.33", ips)
         self.assertIn("192.168.1.1", ips)
         self.assertIn("192.168.1.20", ips)
+    
+    def test_mac_extraction(self):
+        """Remote devices should have their MAC address extracted correctly."""
+        router = next(d for d in self.devices if d["ip"] == "192.168.1.1")
+        self.assertEqual(router["mac"], "AA:BB:CC:DD:EE:FF")
+
+    def test_vendor_extraction(self):
+        """Remote devices should have their vendor extracted correctly."""
+        router = next(d for d in self.devices if d["ip"] == "192.168.1.1")
+        self.assertEqual(router["vendor"], "Cisco Systems")
 
 if __name__ == "__main__":
     unittest.main()
