@@ -107,5 +107,15 @@ class TestParser(unittest.TestCase):
         """Sample XML has 4 hosts but 1 has no IP — only 3 should remain."""
         self.assertEqual(len(self.devices), 3)
 
+    def test_empty_input_raises_value_error(self):
+        """Empty XML input should raise a ValueError."""
+        with self.assertRaises(ValueError):
+            parse_nmap_output("")
+
+    def test_whitespace_input_raises_value_error(self):
+        """Whitespace-only XML input should raise a ValueError."""
+        with self.assertRaises(ValueError):
+            parse_nmap_output("   ")
+
 if __name__ == "__main__":
     unittest.main()
