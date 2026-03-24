@@ -1,7 +1,7 @@
 import logging
 import os
 from datetime import datetime
-from utils.config import get_config
+from utils.config import get_config, _get_project_root
 
 
 def setup_logger(name: str = "ip_mac_scanner") -> logging.Logger:
@@ -24,9 +24,7 @@ def setup_logger(name: str = "ip_mac_scanner") -> logging.Logger:
     config = get_config()
 
     log_dir = os.path.join(
-        os.path.dirname(__file__),
-        "..",
-        "..",
+        _get_project_root(),
         config["log_directory"]
     )
     try:

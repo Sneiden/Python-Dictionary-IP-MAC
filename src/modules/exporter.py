@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime
 from typing import List, Dict
-from utils.config import get_config
+from utils.config import get_config, _get_project_root
 from utils.logger import setup_logger
 
 logger = setup_logger()
@@ -24,11 +24,9 @@ def export_to_json(devices: List[Dict[str, str]]) -> str:
     config = get_config()
 
     output_dir = os.path.join(
-        os.path.dirname(__file__),
-        "..",
-        "..",
+        _get_project_root(),
         config["output_directory"]
-        )
+    )
     try:
         os.makedirs(output_dir, exist_ok=True)
     except OSError as e:
