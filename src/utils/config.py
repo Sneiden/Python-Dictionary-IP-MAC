@@ -1,7 +1,22 @@
+import sys
 import json
 import os
 from typing import Any, Dict
 
+def _get_project_root() -> str:
+    """
+    Resolves the project root path correctly both when running
+    as a Python script and as a PyInstaller executable.
+    """
+    if getattr(sys, "frozen", False):
+        # Running as PyInstaller executable
+        # sys.executable = path to the .exe file
+        return os.path.dirname(sys.executable)
+    else:
+        # Running as a normal Python script
+        return os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..")
+        )
 
 def load_config() -> Dict[str, Any]:
     """
@@ -18,9 +33,7 @@ def load_config() -> Dict[str, Any]:
         ValueError: If settings.json contains invalid JSON.
     """
     config_path = os.path.join(
-        os.path.dirname(__file__),
-        "..",
-        "..",
+        _get_project_root(),
         "config",
         "settings.json"
     )
@@ -58,7 +71,7 @@ def get_config() -> Dict[str, Any]:
 
     return {
         "nmap_flags": config["scan"]["nmap_flags"],
-        "timeout_seconds": int(config["scan"]["timeout_seconds"]),
+        "timeout_seconds": int(config["scan"]["timeout_seconds"]) if config["scan"]["timeout_seconds"] is not None else None,
         "output_directory": config["output"]["directory"],
         "filename_prefix": config["output"]["filename_prefix"],
         "log_level": config["logging"]["level"],

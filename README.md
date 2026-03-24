@@ -71,7 +71,7 @@ All configurable values are managed from `config/settings.json`:
 | Setting | Description |
 |---|---|
 | `nmap_flags` | Flags passed to the Nmap command |
-| `timeout_seconds` | Maximum time allowed for the scan |
+| `timeout_seconds` | Max scan duration in seconds. Set to `null` to wait indefinitely | `null` |
 | `output.directory` | Directory where JSON results are saved |
 | `filename_prefix` | Prefix for the generated JSON filename |
 | `logging.level` | Minimum log level (`DEBUG`, `INFO`, `WARNING`, `ERROR`) |

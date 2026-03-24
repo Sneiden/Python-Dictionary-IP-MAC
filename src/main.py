@@ -49,6 +49,8 @@ def main():
     except KeyboardInterrupt:
         logger.warning("Scan cancelled by user.")
         print("\n\n[✗] Scan cancelled by user.")
+
+    input("\nPress Enter to exit...")
         
 if __name__ == "__main__":
     main()
