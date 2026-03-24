@@ -20,6 +20,14 @@ A Python CLI tool that scans a local network using **Nmap** and generates a stru
 
 ---
 
+## 📦 Latest Release
+
+[![GitHub release](https://img.shields.io/github/v/release/Sneiden/Python-Dictionary-IP-MAC)](https://github.com/Sneiden/Python-Dictionary-IP-MAC/releases/latest)
+
+Download the latest version from the [Releases page](https://github.com/Sneiden/Python-Dictionary-IP-MAC/releases/latest).
+
+---
+
 ## Installation
 
 ```bash
