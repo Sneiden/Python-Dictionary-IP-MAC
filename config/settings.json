@@ -1,7 +1,7 @@
 {
     "scan": {
         "nmap_flags": ["-sn", "-PR", "-oX", "-"],
-        "timeout_seconds": 60
+        "timeout_seconds": null
     },
     "output": {
         "directory": "output",
