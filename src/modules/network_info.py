@@ -1,4 +1,7 @@
 import subprocess
+import re
+import os
+import sys
 from utils.logger import setup_logger
 
 logger = setup_logger()
@@ -19,8 +22,11 @@ def get_network_range() -> str:
     result = subprocess.run(
         ["ipconfig"],
         capture_output=True,
-        text=True
+        text=True,
+        encoding="utf-8",
+        errors="replace"
     )
+
     output = result.stdout
     logger.debug("Raw ipconfig output captured.")
 
@@ -38,11 +44,19 @@ def get_network_range() -> str:
             current_ip = None
             current_subnet = None
 
-        if "IPv4 Address" in line:
-            current_ip = line.split(":")[-1].strip()
-        if "Subnet Mask" in line:
-            current_subnet = line.split(":")[-1].strip()
+        # Match IPv4 address regardless of language
+        ip_match = re.search(r":\s*((\d{1,3}\.){3}\d{1,3})\s*$", line)
+        if ip_match and not current_ip:
+            candidate = ip_match.group(1)
+            # Exclude gateway addresses — only capture first IP per interface
+            if not current_ip:
+                current_ip = candidate
 
+        # Match subnet mask regardless of language
+        subnet_match = re.search(r":\s*(255(\.\d{1,3}){3})\s*$", line)
+        if subnet_match and not current_subnet:
+            current_subnet = subnet_match.group(1)
+        
         if current_name and current_ip and current_subnet:
             interfaces.append({
                 "name": current_name,
