@@ -1,3 +1,10 @@
+![GitHub release](https://img.shields.io/github/v/release/Sneiden/Python-Dictionary-IP-MAC)
+![GitHub license](https://img.shields.io/github/license/Sneiden/Python-Dictionary-IP-MAC)
+![Python](https://img.shields.io/badge/python-3.8+-blue)
+![Platform](https://img.shields.io/badge/platform-windows-lightgrey)
+![Nmap](https://img.shields.io/badge/requires-nmap-green)
+
+
 # Python-Dictionary-IP-MAC
 
 A Python CLI tool that scans a local network using **Nmap** and generates a structured JSON dictionary of all discovered **IP** and **MAC** addresses, including vendor and hostname information.
@@ -17,7 +24,7 @@ A Python CLI tool that scans a local network using **Nmap** and generates a stru
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/<your-username>/Python-Dictionary-IP-MAC.git
+git clone https://github.com/Sneiden/Python-Dictionary-IP-MAC.git
 cd Python-Dictionary-IP-MAC
 
 # 2. Install Nmap
