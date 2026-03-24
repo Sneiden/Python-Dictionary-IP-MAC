@@ -1,0 +1,14 @@
+{
+    "scan": {
+        "nmap_flags": ["-sn", "-PR", "-oX", "-"],
+        "timeout_seconds": null
+    },
+    "output": {
+        "directory": "output",
+        "filename_prefix": "Network_Dictionary"
+    },
+    "logging": {
+        "level": "DEBUG",
+        "directory": "logs"
+    }
+}
